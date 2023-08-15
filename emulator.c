@@ -5,6 +5,19 @@ void unimplemented_instruction(u_int8_t opcode) {
   exit(1);
 }
 
+int get_parity(u_int8_t number) {
+  int count = 0;
+  count += ((number & 0b00000001) == 0b00000001);
+  count += ((number & 0b00000010) == 0b00000010);
+  count += ((number & 0b00000100) == 0b00000100);
+  count += ((number & 0b00001000) == 0b00001000);
+  count += ((number & 0b00010000) == 0b00010000);
+  count += ((number & 0b00100000) == 0b00100000);
+  count += ((number & 0b01000000) == 0b01000000);
+  count += ((number & 0b10000000) == 0b10000000);
+  return ((count % 2) == 0) ? (1) : (0);
+}
+
 u_int8_t Emulate_8080_Op(State8080 *state) {
   u_int8_t *opcode = &state->memory[state->pc];
 
@@ -12,9 +25,11 @@ u_int8_t Emulate_8080_Op(State8080 *state) {
   case 0x00:
     break;
 
-  case 0x01:
-    unimplemented_instruction(*opcode);
-    break;
+  case 0x01: {
+    state->b = opcode[1];
+    state->c = opcode[2];
+    state->pc += 2;
+  } break;
 
   case 0x02:
     unimplemented_instruction(*opcode);
@@ -28,13 +43,20 @@ u_int8_t Emulate_8080_Op(State8080 *state) {
     unimplemented_instruction(*opcode);
     break;
 
-  case 0x05:
-    unimplemented_instruction(*opcode);
-    break;
+  case 0x05: {
+    u_int16_t answer = (u_int16_t)state->b - 0x01;
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = get_parity(answer & 0xff);
+    state->cc.ac = 0; // not implemented
+    state->b = answer & 0xff;
+  } break;
 
-  case 0x06:
-    unimplemented_instruction(*opcode);
-    break;
+  case 0x06: {
+    state->b = opcode[1];
+    state->pc += 1;
+  } break;
 
   case 0x07:
     unimplemented_instruction(*opcode);
@@ -44,9 +66,14 @@ u_int8_t Emulate_8080_Op(State8080 *state) {
     unimplemented_instruction(*opcode);
     break;
 
-  case 0x09:
-    unimplemented_instruction(*opcode);
-    break;
+  case 0x09: {
+    u_int32_t answer = (u_int32_t)state->l + (u_int32_t)state->c +
+                       (((u_int32_t)state->h) << 8) +
+                       (((u_int32_t)state->b) << 8);
+    state->cc.cy = (answer > 0xffff);
+    state->l = answer & 0xff;
+    state->h = (answer & 0xffff) >> 8;
+  } break;
 
   case 0x0a:
     unimplemented_instruction(*opcode);
@@ -60,33 +87,44 @@ u_int8_t Emulate_8080_Op(State8080 *state) {
     unimplemented_instruction(*opcode);
     break;
 
-  case 0x0d:
-    unimplemented_instruction(*opcode);
-    break;
+  case 0x0d: {
+    u_int16_t answer = (u_int16_t)state->c - 0x01;
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = get_parity(answer & 0xff);
+    state->cc.ac = 0; // not implemented
+    state->c = answer & 0xff;
+  } break;
 
-  case 0x0e:
-    unimplemented_instruction(*opcode);
-    break;
+  case 0x0e: {
+    state->c = opcode[1];
+  } break;
 
-  case 0x0f:
-    unimplemented_instruction(*opcode);
-    break;
+  case 0x0f: {
+    state->cc.cy = state->a & 0x1;
+    state->a = (state->a >> 1) + (((u_int8_t)state->cc.cy) << 7);
+  } break;
 
   case 0x10:
     unimplemented_instruction(*opcode);
     break;
 
-  case 0x11:
-    unimplemented_instruction(*opcode);
-    break;
+  case 0x11: {
+    state->e = opcode[1];
+    state->d = opcode[2];
+    state->pc += 2;
+  } break;
 
   case 0x12:
     unimplemented_instruction(*opcode);
     break;
 
-  case 0x13:
-    unimplemented_instruction(*opcode);
-    break;
+  case 0x13: {
+    u_int32_t answer = (u_int32_t)state->e + (((u_int32_t)state->d) << 8) - 0x1;
+    state->e = answer & 0xff;
+    state->d = (answer & 0xffff) >> 8;
+  } break;
 
   case 0x14:
     unimplemented_instruction(*opcode);
@@ -108,13 +146,19 @@ u_int8_t Emulate_8080_Op(State8080 *state) {
     unimplemented_instruction(*opcode);
     break;
 
-  case 0x19:
-    unimplemented_instruction(*opcode);
-    break;
+  case 0x19: {
+    u_int32_t answer = (u_int32_t)state->l + (u_int32_t)state->e +
+                       (((u_int32_t)state->h) << 8) +
+                       (((u_int32_t)state->d) << 8);
+    state->cc.cy = (answer > 0xffff);
+    state->l = answer & 0xff;
+    state->h = (answer & 0xffff) >> 8;
+  } break;
 
-  case 0x1a:
-    unimplemented_instruction(*opcode);
-    break;
+  case 0x1a: {
+    state->a =
+        state->memory[(((u_int16_t)state->d) << 8) | ((u_int16_t)state->e)];
+  } break;
 
   case 0x1b:
     unimplemented_instruction(*opcode);

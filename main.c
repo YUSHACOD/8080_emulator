@@ -43,6 +43,7 @@ void emulate(State8080 *state) {
 int main(int argc, char *argv[]) {
 
   printf("Hello, World\n");
+
   init(argv[1]);
   emulate(&state);
 
