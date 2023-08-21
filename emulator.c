@@ -103,8 +103,8 @@ u_int8_t Emulate_8080_Op(State8080 *state) {
   } break;
 
   case 0x0f: {
-    state->cc.cy = state->a & 0x1;
-    state->a = (state->a >> 1) + (((u_int8_t)state->cc.cy) << 7);
+    state->cc.cy = (1 == (state->a & 0x1));
+    state->a = (state->a >> 1) | (((u_int8_t)state->cc.cy) << 7);
   } break;
 
   case 0x10: {
@@ -869,6 +869,8 @@ u_int8_t Emulate_8080_Op(State8080 *state) {
     if (state->cc.z) {
       state->pc = (((u_int16_t)opcode[2]) << 8) | ((u_int16_t)opcode[1]);
       state->pc -= 1;
+    } else {
+      state->pc += 2;
     }
   } break;
 
@@ -907,10 +909,10 @@ u_int8_t Emulate_8080_Op(State8080 *state) {
   } break;
 
   case 0xc9: {
-    state->pc = (((u_int16_t)state->memory[state->sp + 1]) << 8) +
+    state->pc = (((u_int16_t)state->memory[state->sp + 1]) << 8) |
                 ((u_int16_t)state->memory[state->sp]);
     state->pc -= 1;
-    state->sp -= 2;
+    state->sp += 2;
   } break;
 
   case 0xca: {
@@ -958,6 +960,7 @@ u_int8_t Emulate_8080_Op(State8080 *state) {
 
   case 0xd3: {
     // OUT D8
+    state->pc += 1;
   } break;
 
   case 0xd4: {
@@ -1147,6 +1150,7 @@ u_int8_t Emulate_8080_Op(State8080 *state) {
 
   case 0xfb: {
     // EI special
+    state->int_enable = 0x1;
   } break;
 
   case 0xfc: {
