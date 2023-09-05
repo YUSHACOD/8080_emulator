@@ -2,7 +2,6 @@
 
 void unimplemented_instruction(u_int8_t opcode) {
   printf("Implement intruction with opcode : %x.\n", (int)opcode);
-  exit(1);
 }
 
 int get_parity(u_int8_t number) {
@@ -790,27 +789,69 @@ u_int8_t Emulate_8080_Op(State8080 *state) {
   } break;
 
   case 0x88: {
-    unimplemented_instruction(*opcode);
+    u_int16_t answer = ((u_int16_t)state->a) + ((u_int16_t)state->b) +
+                       ((u_int16_t)state->cc.cy);
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = get_parity(answer & 0xff);
+    state->cc.ac = 0; // not implemented
+    state->a = answer & 0xff;
   } break;
 
   case 0x89: {
-    unimplemented_instruction(*opcode);
+    u_int16_t answer = ((u_int16_t)state->a) + ((u_int16_t)state->c) +
+                       ((u_int16_t)state->cc.cy);
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = get_parity(answer & 0xff);
+    state->cc.ac = 0; // not implemented
+    state->a = answer & 0xff;
   } break;
 
   case 0x8a: {
-    unimplemented_instruction(*opcode);
+    u_int16_t answer = ((u_int16_t)state->a) + ((u_int16_t)state->d) +
+                       ((u_int16_t)state->cc.cy);
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = get_parity(answer & 0xff);
+    state->cc.ac = 0; // not implemented
+    state->a = answer & 0xff;
   } break;
 
   case 0x8b: {
-    unimplemented_instruction(*opcode);
+    u_int16_t answer = ((u_int16_t)state->a) + ((u_int16_t)state->e) +
+                       ((u_int16_t)state->cc.cy);
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = get_parity(answer & 0xff);
+    state->cc.ac = 0; // not implemented
+    state->a = answer & 0xff;
   } break;
 
   case 0x8c: {
-    unimplemented_instruction(*opcode);
+    u_int16_t answer = ((u_int16_t)state->a) + ((u_int16_t)state->h) +
+                       ((u_int16_t)state->cc.cy);
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = get_parity(answer & 0xff);
+    state->cc.ac = 0; // not implemented
+    state->a = answer & 0xff;
   } break;
 
   case 0x8d: {
-    unimplemented_instruction(*opcode);
+    u_int16_t answer = ((u_int16_t)state->a) + ((u_int16_t)state->l) +
+                       ((u_int16_t)state->cc.cy);
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = get_parity(answer & 0xff);
+    state->cc.ac = 0; // not implemented
+    state->a = answer & 0xff;
   } break;
 
   case 0x8e: {
@@ -827,31 +868,74 @@ u_int8_t Emulate_8080_Op(State8080 *state) {
   } break;
 
   case 0x8f: {
-    unimplemented_instruction(*opcode);
+    u_int16_t answer = ((u_int16_t)state->a) + ((u_int16_t)state->a) +
+                       ((u_int16_t)state->cc.cy);
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = get_parity(answer & 0xff);
+    state->cc.ac = 0; // not implemented
+    state->a = answer & 0xff;
   } break;
 
   case 0x90: {
-    unimplemented_instruction(*opcode);
+    u_int16_t answer = ((u_int16_t)state->a) - ((u_int16_t)state->b);
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = get_parity(answer & 0xff);
+    state->cc.ac = 0; // not implemented
+    state->a = answer & 0xff;
   } break;
 
   case 0x91: {
-    unimplemented_instruction(*opcode);
+    u_int16_t answer = ((u_int16_t)state->a) - ((u_int16_t)state->c);
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = get_parity(answer & 0xff);
+    state->cc.ac = 0; // not implemented
+    state->a = answer & 0xff;
   } break;
 
   case 0x92: {
-    unimplemented_instruction(*opcode);
+    u_int16_t answer = ((u_int16_t)state->a) - ((u_int16_t)state->d);
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = get_parity(answer & 0xff);
+    state->cc.ac = 0; // not implemented
+    state->a = answer & 0xff;
   } break;
 
   case 0x93: {
-    unimplemented_instruction(*opcode);
+    u_int16_t answer = ((u_int16_t)state->a) - ((u_int16_t)state->e);
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = get_parity(answer & 0xff);
+    state->cc.ac = 0; // not implemented
+    state->a = answer & 0xff;
   } break;
 
   case 0x94: {
-    unimplemented_instruction(*opcode);
+    u_int16_t answer = ((u_int16_t)state->a) - ((u_int16_t)state->h);
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = get_parity(answer & 0xff);
+    state->cc.ac = 0; // not implemented
+    state->a = answer & 0xff;
   } break;
 
   case 0x95: {
-    unimplemented_instruction(*opcode);
+    u_int16_t answer = ((u_int16_t)state->a) - ((u_int16_t)state->l);
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = get_parity(answer & 0xff);
+    state->cc.ac = 0; // not implemented
+    state->a = answer & 0xff;
   } break;
 
   case 0x96: {
@@ -867,31 +951,79 @@ u_int8_t Emulate_8080_Op(State8080 *state) {
   } break;
 
   case 0x97: {
-    unimplemented_instruction(*opcode);
+    u_int16_t answer = ((u_int16_t)state->a) - ((u_int16_t)state->a);
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = get_parity(answer & 0xff);
+    state->cc.ac = 0; // not implemented
+    state->a = answer & 0xff;
   } break;
 
   case 0x98: {
-    unimplemented_instruction(*opcode);
+    u_int16_t answer = ((u_int16_t)state->a) - ((u_int16_t)state->b) -
+                       ((u_int16_t)state->cc.cy);
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = get_parity(answer & 0xff);
+    state->cc.ac = 0; // not implemented
+    state->a = answer & 0xff;
   } break;
 
   case 0x99: {
-    unimplemented_instruction(*opcode);
+    u_int16_t answer = ((u_int16_t)state->a) - ((u_int16_t)state->c) -
+                       ((u_int16_t)state->cc.cy);
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = get_parity(answer & 0xff);
+    state->cc.ac = 0; // not implemented
+    state->a = answer & 0xff;
   } break;
 
   case 0x9a: {
-    unimplemented_instruction(*opcode);
+    u_int16_t answer = ((u_int16_t)state->a) - ((u_int16_t)state->d) -
+                       ((u_int16_t)state->cc.cy);
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = get_parity(answer & 0xff);
+    state->cc.ac = 0; // not implemented
+    state->a = answer & 0xff;
   } break;
 
   case 0x9b: {
-    unimplemented_instruction(*opcode);
+    u_int16_t answer = ((u_int16_t)state->a) - ((u_int16_t)state->e) -
+                       ((u_int16_t)state->cc.cy);
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = get_parity(answer & 0xff);
+    state->cc.ac = 0; // not implemented
+    state->a = answer & 0xff;
   } break;
 
   case 0x9c: {
-    unimplemented_instruction(*opcode);
+    u_int16_t answer = ((u_int16_t)state->a) - ((u_int16_t)state->h) -
+                       ((u_int16_t)state->cc.cy);
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = get_parity(answer & 0xff);
+    state->cc.ac = 0; // not implemented
+    state->a = answer & 0xff;
   } break;
 
   case 0x9d: {
-    unimplemented_instruction(*opcode);
+    u_int16_t answer = ((u_int16_t)state->a) - ((u_int16_t)state->l) -
+                       ((u_int16_t)state->cc.cy);
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = get_parity(answer & 0xff);
+    state->cc.ac = 0; // not implemented
+    state->a = answer & 0xff;
   } break;
 
   case 0x9e: {
@@ -908,7 +1040,14 @@ u_int8_t Emulate_8080_Op(State8080 *state) {
   } break;
 
   case 0x9f: {
-    unimplemented_instruction(*opcode);
+    u_int16_t answer = ((u_int16_t)state->a) - ((u_int16_t)state->a) -
+                       ((u_int16_t)state->cc.cy);
+    state->cc.z = ((answer & 0xff) == 0);
+    state->cc.s = ((answer & 0x80) != 0);
+    state->cc.cy = (answer > 0xff);
+    state->cc.p = get_parity(answer & 0xff);
+    state->cc.ac = 0; // not implemented
+    state->a = answer & 0xff;
   } break;
 
   case 0xa0: {
